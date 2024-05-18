@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+<h1>{{ first.content }} {{ second.content }}</h1>
+<h2>{{ datatime|datatime_format }}</h2>
+<img src="{{ url_for('static', filename='images/园丁.jpg') }}" alt="图片1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static',filename='js/script1.js') }}"></script>
+</body>
+</html>
