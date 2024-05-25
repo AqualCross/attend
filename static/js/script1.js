@@ -1,1 +1,0 @@
-alert("我是script1");
