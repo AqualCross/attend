@@ -2,9 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: white;
+        }
+        .login-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .login-container h2 {
+            margin-bottom: 20px;
+        }
+        .login-container label {
+            margin-right: 10px;
+        }
+        .login-container input[type="submit"] {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-
+    <div class="login-container">
+        <h2>登录</h2>
+        <form action="/login" method="post">
+            <div>
+                <input type="radio" id="teacher" name="role" value="teacher">
+                <label for="teacher">老师</label>
+                <input type="radio" id="student" name="role" value="student">
+                <label for="student">学生</label>
+            </div>
+            <div>
+                <label for="username">学号或工号:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div>
+                <label for="password">密码:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div>
+                <input type="submit" value="登录">
+            </div>
+        </form>
+    </div>
 </body>
 </html>
