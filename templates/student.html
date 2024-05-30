@@ -2,9 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>学生</title>
+    <title>学生页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: white;
+        }
+    </style>
+    <script>
+        let attend = false;
+
+        function getLatestAttend() {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', '/get_latest_attend?{{ uid }}'), true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    attend = JSON.parse(xhr.responseText).attend;
+                    // 在这里更新页面上的attend属性值
+                }
+            };
+            xhr.send();
+        }
+    </script>
 </head>
 <body>
+    <h1>欢迎，{{ name }}同学！</h1>
+    <form action="/student/updatePassword/{{ uid }}" method="post">
+        <label for="newPassword">新密码：</label>
+        <input type="password" id="newPassword" name="new_password" required><br>
+        <input type="submit" value="更改密码">
+    </form>
+
+    <button id="checkInButton">签到</button>
+    <div id="responseMessage"></div>
+    <script>
+        document.getElementById('checkInButton').addEventListener('click', function() {
+            fetch('/student/{{ uid }}')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('responseMessage').innerText = data.message;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
 
 </body>
 </html>

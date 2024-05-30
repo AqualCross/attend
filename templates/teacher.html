@@ -2,9 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>教师</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教师页面</title>
 </head>
 <body>
+    <h1>欢迎，{{ name }}老师！</h1>
+    <form id="updatePasswordForm">
+        <label for="newPassword">新密码：</label>
+        <input type="password" id="newPassword" name="new_password" required><br>
+        <input type="submit" value="更改密码">
+    </form>
+    <div id="responseMessage"></div>
+
+    <script>
+        document.getElementById('updatePasswordForm').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent the default form submission
+            const formData = new FormData(this);  // Get the form data
+            fetch('/teacher/updatePassword/{{ uid }}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the returned message
+                document.getElementById('responseMessage').innerText = data.message;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+
+    <form id="newAttendance">
+        <label for="group">需要签到的班级：</label>
+        <input type="text" id="group" name="group" required><br>
+        <input type="submit" value="发起签到">
+    </form>
 
 </body>
 </html>

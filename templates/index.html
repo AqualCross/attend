@@ -19,9 +19,6 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        .login-container h2 {
-            margin-bottom: 20px;
-        }
         .login-container label {
             margin-right: 10px;
         }
@@ -32,17 +29,16 @@
 </head>
 <body>
     <div class="login-container">
-        <h2>登录</h2>
         <form action="/login" method="post">
             <div>
-                <input type="radio" id="teacher" name="role" value="teacher">
+                <input type="radio" id="teacher" name="role" value="teacher" checked>
                 <label for="teacher">老师</label>
                 <input type="radio" id="student" name="role" value="student">
                 <label for="student">学生</label>
             </div>
             <div>
                 <label for="username">学号或工号:</label>
-                <input type="text" id="username" name="username" required>
+                <input type="text" id="uid" name="uid" required>
             </div>
             <div>
                 <label for="password">密码:</label>
