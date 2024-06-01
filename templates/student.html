@@ -13,44 +13,51 @@
             background-color: white;
         }
     </style>
-    <script>
-        let attend = false;
-
-        function getLatestAttend() {
-            let xhr = new XMLHttpRequest();
-            xhr.open('GET', '/get_latest_attend?{{ uid }}'), true);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    attend = JSON.parse(xhr.responseText).attend;
-                    // 在这里更新页面上的attend属性值
-                }
-            };
-            xhr.send();
-        }
-    </script>
 </head>
 <body>
     <h1>欢迎，{{ name }}同学！</h1>
-    <form action="/student/updatePassword/{{ uid }}" method="post">
+    <form id="updatePasswordForm">
         <label for="newPassword">新密码：</label>
         <input type="password" id="newPassword" name="new_password" required><br>
         <input type="submit" value="更改密码">
     </form>
+    <div id="updatePasswordMessage"></div>
+    <script>
+        document.getElementById('updatePasswordForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            const formData = new FormData(event.target);
+            const url = '/student/updatePassword/{{ uid }}';
+
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(message => {
+                alert(message)
+            })
+            .catch(error => {
+                console.error('请求失败：', error);
+            });
+        });
+    </script>
 
     <button id="checkInButton">签到</button>
     <div id="responseMessage"></div>
     <script>
         document.getElementById('checkInButton').addEventListener('click', function() {
-            fetch('/student/{{ uid }}')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('responseMessage').innerText = data.message;
+            fetch('/student//response/{{ uid }}', {
+                method: 'POST'
+            })
+                .then(response => response.text())
+                .then(message => {
+                    document.getElementById('responseMessage').innerText = message;
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 });
         });
     </script>
-
 </body>
 </html>

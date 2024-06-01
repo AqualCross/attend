@@ -14,13 +14,10 @@ def index():
 
 @bp.route('/login', methods=['POST'])
 def checkPassword():
-    role = request.form.get('role')
-    uid = request.form.get('uid')
-    password = request.form.get('password')
-    if role == 'student':
-        sheet = Student
-    else:
-        sheet = Teacher
+    role = request.form['role']
+    uid = request.form['uid']
+    password = request.form['password']
+    sheet = Student if role == 'student' else Teacher
     engine = create_engine('sqlite:///./sqlalchemy.db', echo=True, future=True)
     with Session(engine) as session:
         stmt = select(sheet.password).where(sheet.uid == uid)

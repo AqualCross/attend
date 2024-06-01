@@ -12,23 +12,23 @@
         <input type="password" id="newPassword" name="new_password" required><br>
         <input type="submit" value="更改密码">
     </form>
-    <div id="responseMessage"></div>
-
     <script>
         document.getElementById('updatePasswordForm').addEventListener('submit', function(event) {
-            event.preventDefault();  // Prevent the default form submission
-            const formData = new FormData(this);  // Get the form data
-            fetch('/teacher/updatePassword/{{ uid }}', {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            const formData = new FormData(event.target);
+            const url = '/teacher/updatePassword/{{ uid }}';
+
+            fetch(url, {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
-            .then(data => {
-                // Display the returned message
-                document.getElementById('responseMessage').innerText = data.message;
+            .then(response => response.text())
+            .then(message => {
+                alert(message)
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('请求失败：', error);
             });
         });
     </script>
@@ -39,5 +39,24 @@
         <input type="submit" value="发起签到">
     </form>
 
+    <script>
+        document.getElementById('newAttendance').addEventListener('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            const formData = new FormData(event.target);
+
+            fetch('/teacher/start', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(message => {
+                alert(message)
+            })
+            .catch(error => {
+                console.error('请求失败：', error);
+            });
+        });
+    </script>
 </body>
 </html>
