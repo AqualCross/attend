@@ -1,3 +1,116 @@
-body{
-    background-color: chocolate;
+/* 通用样式 */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    font-size: 3em;
+    color: #333;
+    margin-bottom: 40px;
+}
+
+/* 表单样式 */
+form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form#updatePasswordForm {
+    width: 200px;
+}
+
+label, input {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+input[type="password"], input[type="text"], input[type="file"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* 按钮样式 */
+input[type="submit"], button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+input[type="submit"]:hover, button:hover {
+    background-color: #45a049;
+}
+
+#newAttendance input[type="submit"] {
+    background-color: #008CBA;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1em;
+}
+
+#newAttendance input[type="submit"]:hover {
+    background-color: #007bb5;
+}
+
+form#fileUploadForm {
+    width: 300px;
+}
+
+form#fileUploadForm input[type="file"] {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* 学生页面签到按钮样式 */
+#checkInButton {
+    background-color: #008CBA;
+    color: white;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+    width: auto;
+}
+
+#checkInButton:hover {
+    background-color: #007bb5;
+}
+
+/* 教师页面发起签到输入框和按钮样式 */
+form#newAttendance {
+    width: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form#newAttendance input[type="text"] {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+form#newAttendance input[type="submit"] {
+    width: auto;
 }
