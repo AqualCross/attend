@@ -3,16 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>学生页面</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: white;
-        }
-    </style>
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
     <h1>欢迎，{{ name }}同学！</h1>
@@ -44,7 +35,6 @@
     </script>
 
     <button id="checkInButton">签到</button>
-    <div id="responseMessage"></div>
     <script>
         document.getElementById('checkInButton').addEventListener('click', function() {
             fetch('/student//response/{{ uid }}', {
@@ -53,6 +43,7 @@
                 .then(response => response.text())
                 .then(message => {
                     document.getElementById('responseMessage').innerText = message;
+                    alert(message)
                 })
                 .catch(error => {
                     console.error('Error:', error);
