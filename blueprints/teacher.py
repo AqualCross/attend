@@ -17,19 +17,20 @@ def updatePassword(uid):
     return '成功修改密码'
 
 
-attendance_request = {}
-
-
 @bp.route('/start', methods=['POST'])
 def startAttendance():
-    global attendance_request
     group = request.form['group']
     now_time = time()
     engine = create_engine('sqlite:///./sqlalchemy.db', echo=True, future=True)
     with Session(engine) as session:
-        stmt = select(Student.uid).where(Student.group == group)
+        stmt = update(Student).where(Student.group == group).values(time_attend=now_time)
+        session.execute(stmt)
+        stmt = select(Student).where(Student.group == group)
         result = session.execute(stmt)
-        for row in result:
-            uid = row[0]
-            attendance_request[uid] = now_time
+        students = result.scalars().all()
+        for student in students:
+            uid, total_attend = student.uid, student.total_attend
+            stmt = update(Student).where(Student.uid == uid).values(total_attend=total_attend+1)
+            session.execute(stmt)
+        session.commit()
     return '成功发起签到'

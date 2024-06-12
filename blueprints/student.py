@@ -3,7 +3,6 @@ from sqlalchemy import create_engine, select, update
 from sqlalchemy.orm import Session
 from models import Student
 from time import time
-from blueprints.teacher import attendance_request
 
 bp = Blueprint('student', __name__, url_prefix='/student')
 
@@ -19,41 +18,36 @@ def updatePassword(uid):
     return '成功修改密码'
 
 
+LATE_TD = 10 * 60
+MAX_TD = 45 * 60
+
+
 @bp.route('/response/<uid>', methods=['POST'])
 def response(uid):
-    late_time_diff = 10 * 60
-    failed_time_diff = 45 * 60
     now_time = time()
-    begin_time = attendance_request.get(uid, None)
-    if begin_time is None:
-        return '当前没有进行中的签到'
-    time_diff = now_time - begin_time
     engine = create_engine('sqlite:///./sqlalchemy.db', echo=True, future=True)
+    message: str
     with Session(engine) as session:
-        if time_diff < late_time_diff:
+        stmt = select(Student.time_attend).where(Student.uid == uid)
+        result = session.execute(stmt)
+        begin_time = result.scalar_one()
+        time_diff = now_time - begin_time
+        if time_diff > MAX_TD:
+            message = '当前没有进行中的签到'
+        elif time_diff < LATE_TD:
+            message = '签到成功'
             stmt = select(Student.normal_attend).where(Student.uid == uid)
             result = session.execute(stmt)
-            normal_attend = result.scalar_one()
-            normal_attend += 1
-            stmt = update(Student).where(Student.uid == uid).values(normal_attend=normal_attend)
+            number = result.scalar_one() + 1
+            stmt = update(Student).where(Student.uid == uid).values(normal_attend=number, time_attend=0)
             session.execute(stmt)
             session.commit()
-            return '签到成功'
-        elif time_diff < failed_time_diff:
+        else:
+            message = '迟到了'
             stmt = select(Student.late_attend).where(Student.uid == uid)
             result = session.execute(stmt)
-            late_attend = result.scalar_one()
-            late_attend += 1
-            stmt = update(Student).where(Student.uid == uid).values(late_attend=late_attend)
+            number = result.scalar_one() + 1
+            stmt = update(Student).where(Student.uid == uid).values(late_attend=number, time_attend=0)
             session.execute(stmt)
             session.commit()
-            return '迟到了'
-        else:
-            stmt = select(Student.failed_attend).where(Student.uid == uid)
-            result = session.execute(stmt)
-            failed_attend = result.scalar_one()
-            failed_attend += 1
-            stmt = update(Student).where(Student.uid == uid).values(failed_attend=failed_attend)
-            session.execute(stmt)
-            session.commit()
-            return '旷课'
+    return message

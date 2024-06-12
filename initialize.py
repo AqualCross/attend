@@ -23,10 +23,11 @@ if __name__ == '__main__':
                 uid=row['学号'],
                 name=row['姓名'],
                 group=row['班级'],
-                password=row.get('密码', 12345678),
+                password=row.get('密码', 123456),
                 normal_attend=row.get('签到次数', 0),
                 late_attend=row.get('迟到次数', 0),
-                failed_attend=row.get('旷课次数', 0),
+                total_attend=row.get('需签到总次数', 0),
+                time_attend=row.get('签到起始时间', 0),
             ))
         for _, row in teacher.iterrows():
             session.add(Teacher(

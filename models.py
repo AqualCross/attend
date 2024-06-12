@@ -1,7 +1,5 @@
-import uuid
-
-from sqlalchemy import Column, Integer, String, create_engine, ForeignKey
-from sqlalchemy.orm import DeclarativeBase, Session
+from sqlalchemy import Column, Integer, String, Float, create_engine
+from sqlalchemy.orm import DeclarativeBase
 
 
 class Base(DeclarativeBase):
@@ -10,7 +8,14 @@ class Base(DeclarativeBase):
 
 class Student(Base):
     """
-    uid name group password normal_attend late_attend failed_attend
+    ``uid`` 学号
+    ``name`` 姓名
+    ``group`` 班级
+    ``password`` 密码
+    ``normal_attend`` 完美签到成功次数
+    ``late_attend`` 迟到次数
+    ``total_attend`` 总需签到次数
+    ``time_attend`` 签到起始时间
     """
     __tablename__ = 'students'
 
@@ -20,7 +25,8 @@ class Student(Base):
     password = Column(String, default='12345678')
     normal_attend = Column(Integer, default=0)
     late_attend = Column(Integer, default=0)
-    failed_attend = Column(Integer, default=0)
+    total_attend = Column(Integer, default=0)
+    time_attend = Column(Float, default=0)
 
 
 class Teacher(Base):
@@ -32,7 +38,6 @@ class Teacher(Base):
 
 
 if __name__ == '__main__':
-    # 创建sqlite连接引擎
     engine = create_engine('sqlite:///./sqlalchemy.db', echo=True, future=True)
 
     # 创建所有Base类的表
