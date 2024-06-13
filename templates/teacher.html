@@ -43,20 +43,53 @@
     <script>
         document.getElementById('newAttendance').addEventListener('submit', function(event) {
             event.preventDefault(); // 阻止表单默认提交行为
+            if (navigator.geolocation)
+            {
+                console.log("可定位")
+                navigator.geolocation.getCurrentPosition(successCall,errorCall);
+            }
+            else
+            {
+                alert("无法定位");
+            }
+            function successCall(position)
+            {
+                console.log("成功定位")
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude
+                const formData = new FormData(event.target);
+                formData.append('latitude', latitude.toString());
+                formData.append('longitude', longitude.toString());
 
-            const formData = new FormData(event.target);
-
-            fetch('/teacher/start', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.text())
-            .then(message => {
-                alert(message)
-            })
-            .catch(error => {
-                console.error('请求失败：', error);
-            });
+                fetch('/teacher/start', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(message => {
+                    alert(message)
+                })
+                .catch(error => {
+                    console.error('请求失败：', error);
+                });
+            }
+            function errorCall(error) {
+                console.log('定位失败:', error.message);
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        console.log("用户拒绝了地理定位请求。");
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        console.log("位置信息不可用（例如，室内可能无法使用GPS）。");
+                        break;
+                    case error.TIMEOUT:
+                        console.log("地理定位请求超时。");
+                        break;
+                    default:
+                        console.log("发生未知错误。");
+                        break;
+                }
+            }
         });
     </script>
 </body>

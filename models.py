@@ -27,6 +27,9 @@ class Student(Base):
     late_attend = Column(Integer, default=0)
     total_attend = Column(Integer, default=0)
     time_attend = Column(Float, default=0)
+    last_time_attend = Column(Float, default=0)
+    latitude = Column(Float, default=0)
+    longitude = Column(Float, default=0)
 
 
 class Teacher(Base):

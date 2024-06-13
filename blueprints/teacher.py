@@ -20,10 +20,13 @@ def updatePassword(uid):
 @bp.route('/start', methods=['POST'])
 def startAttendance():
     group = request.form['group']
+    latitude = float(request.form['latitude'])
+    longitude = float(request.form['longitude'])
     now_time = time()
     engine = create_engine('sqlite:///./sqlalchemy.db', echo=True, future=True)
     with Session(engine) as session:
-        stmt = update(Student).where(Student.group == group).values(time_attend=now_time)
+        stmt = update(Student).where(Student.group == group).values(
+            time_attend=now_time, latitude=latitude, longitude=longitude)
         session.execute(stmt)
         stmt = select(Student).where(Student.group == group)
         result = session.execute(stmt)

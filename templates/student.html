@@ -37,18 +37,51 @@
     <button id="checkInButton">签到</button>
     <script>
         document.getElementById('checkInButton').addEventListener('click', function() {
-            fetch('/student//response/{{ uid }}', {
-                method: 'POST'
-            })
-                .then(response => response.text())
-                .then(message => {
-                    document.getElementById('responseMessage').innerText = message;
-                    alert(message)
+            if (navigator.geolocation) {
+                console.log("可定位")
+                navigator.geolocation.getCurrentPosition(successCall, errorCall);
+            } else {
+                alert("无法定位");
+            }
+
+            function successCall(position) {
+                console.log("成功定位")
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                fetch(`/student/response/{{ uid }}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({latitude, longitude}),
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        });
+                    .then(response => response.text())
+                    .then(message => {
+                        alert(message)
+                    })
+                    .catch(error => {
+                        console.error('请求失败：', error);
+                    });
+            }
+
+            function errorCall(error) {
+                console.log('定位失败:', error.message);
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        console.log("用户拒绝了地理定位请求。");
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        console.log("位置信息不可用（例如，室内可能无法使用GPS）。");
+                        break;
+                    case error.TIMEOUT:
+                        console.log("地理定位请求超时。");
+                        break;
+                    default:
+                        console.log("发生未知错误。");
+                        break;
+                }
+            }
+        })
     </script>
 </body>
 </html>
