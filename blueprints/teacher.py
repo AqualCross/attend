@@ -1,5 +1,5 @@
 from time import time
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from sqlalchemy import create_engine, select, update
 from sqlalchemy.orm import Session
 from models import Teacher, Student
@@ -37,3 +37,22 @@ def startAttendance():
             session.execute(stmt)
         session.commit()
     return '成功发起签到'
+
+@bp.route('/readRecord/', methods=['POST'])
+def readRecord():
+    group_cheak = request.form['groupCheak']
+    engine = create_engine('sqlite:///./sqlalchemy.db', echo=True, future=True)
+    message = []
+    with Session(engine) as session:
+        stmt = select(Student).where(Student.group == group_cheak)
+        result = session.execute(stmt)
+        students = result.scalars().all()
+        for student in students:
+            message.append({
+                'name': student.name,
+                'time': str(student.last_time_attend),
+                'late': str(student.late_attend),
+                'absent': str(student.total_attend-student.normal_attend-student.late_attend),
+                'rate': str(student.normal_attend/student.total_attend)
+            })
+    return jsonify(message)

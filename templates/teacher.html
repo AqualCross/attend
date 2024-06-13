@@ -92,5 +92,43 @@
             }
         });
     </script>
+
+    <form id="record_request">
+        <label for="groupCheak">需要查看签到情况的班级：</label>
+        <input type="text" id="groupCheak" name="groupCheak" required><br>
+        <input type="submit" value="查看">
+    </form>
+    <div id="messageContainer"></div>
+    <script>
+        document.getElementById('record_request').addEventListener('submit', function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            const formData = new FormData(event.target);
+            const url = '/teacher/readRecord';
+
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                let message = "";
+                data.forEach(student => {
+                    const timestamp = student['time']
+                    // 将时间戳转换为JavaScript Date对象，注意JavaScript中的时间戳是以毫秒为单位，因此需要乘以1000
+                    let date = new Date(timestamp * 1000);
+                    let hours = date.getHours();
+                    let minutes = date.getMinutes();
+                    let seconds = date.getSeconds();
+                    message += `姓名: ${student['name']}, 最新签到时间: ${hours}:${minutes}:${seconds}
+                    迟到次数：${student['late']}，旷课次数：${student['absent']}，签到率：${student['rate']}\n`;
+                });
+                document.getElementById('messageContainer').innerText = message.trim(); // 去除首尾可能的多余空白并显示
+            })
+            .catch(error => {
+                console.error('请求失败：', error);
+            });
+        });
+    </script>
 </body>
 </html>

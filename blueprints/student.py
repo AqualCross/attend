@@ -20,7 +20,6 @@ def updatePassword(uid):
 
 LATE_TD = 10 * 60
 MAX_TD = 45 * 60
-distance = 100
 
 
 @bp.route('/response/<uid>', methods=['POST'])
