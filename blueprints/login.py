@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request
-from sqlalchemy import create_engine, select
+from sqlalchemy import select
 from sqlalchemy.orm import Session
-
+from engine_init import engine
 from models import Student, Teacher
 
 bp = Blueprint('login', __name__, url_prefix='/')
@@ -18,7 +18,6 @@ def checkPassword():
     uid = request.form['uid']
     password = request.form['password']
     sheet = Student if role == 'student' else Teacher
-    engine = create_engine('sqlite:///./sqlalchemy.db', echo=True, future=True)
     with Session(engine) as session:
         stmt = select(sheet.password).where(sheet.uid == uid)
         true_password = session.execute(stmt).scalar_one()

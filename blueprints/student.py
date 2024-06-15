@@ -1,7 +1,8 @@
 from flask import Blueprint, request
-from sqlalchemy import create_engine, select, update
+from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 from models import Student
+from engine_init import engine
 from time import time
 
 bp = Blueprint('student', __name__, url_prefix='/student')
@@ -10,7 +11,6 @@ bp = Blueprint('student', __name__, url_prefix='/student')
 @bp.route('/updatePassword/<uid>', methods=['POST'])
 def updatePassword(uid):
     new_password = request.form['new_password']
-    engine = create_engine('sqlite:///./sqlalchemy.db', echo=True, future=True)
     with Session(engine) as session:
         stmt = update(Student).where(Student.uid == uid).values(password=new_password)
         session.execute(stmt)
@@ -28,7 +28,6 @@ def response(uid):
     latitude = float(data['latitude'])
     longitude = float(data['longitude'])
     now_time = time()
-    engine = create_engine('sqlite:///./sqlalchemy.db', echo=True, future=True)
     message: str
     with Session(engine) as session:
         stmt = select(Student).where(Student.uid == uid)

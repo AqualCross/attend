@@ -1,8 +1,9 @@
 from time import time
 from flask import Blueprint, request, jsonify
-from sqlalchemy import create_engine, select, update
+from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 from models import Teacher, Student
+from engine_init import engine
 
 bp = Blueprint('teacher', __name__, url_prefix='/teacher')
 
@@ -10,7 +11,6 @@ bp = Blueprint('teacher', __name__, url_prefix='/teacher')
 @bp.route('/updatePassword/<uid>', methods=['POST'])
 def updatePassword(uid):
     new_password = request.form['new_password']
-    engine = create_engine('sqlite:///./sqlalchemy.db', echo=True, future=True)
     with Session(engine) as session:
         stmt = update(Teacher).where(Teacher.uid == uid).values(password=new_password)
         session.execute(stmt)
@@ -23,7 +23,6 @@ def startAttendance():
     latitude = float(request.form['latitude'])
     longitude = float(request.form['longitude'])
     now_time = time()
-    engine = create_engine('sqlite:///./sqlalchemy.db', echo=True, future=True)
     with Session(engine) as session:
         stmt = update(Student).where(Student.group == group).values(
             time_attend=now_time, latitude=latitude, longitude=longitude)
@@ -38,10 +37,10 @@ def startAttendance():
         session.commit()
     return '成功发起签到'
 
+
 @bp.route('/readRecord/', methods=['POST'])
 def readRecord():
     group_cheak = request.form['groupCheak']
-    engine = create_engine('sqlite:///./sqlalchemy.db', echo=True, future=True)
     message = []
     with Session(engine) as session:
         stmt = select(Student).where(Student.group == group_cheak)

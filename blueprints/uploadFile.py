@@ -16,13 +16,8 @@ def upload_file():
         return '没有可选择的文件'
 
     if file:
-        # 设置文件存储路径
-        upload_path = os.path.join('static/uploads', file.filename)
-
-        # 检测路径是否存在，不存在则创建
+        upload_path = os.path.join('', file.filename)
         if not os.path.exists(os.path.dirname(upload_path)):
             os.makedirs(os.path.dirname(upload_path))
-
-        # 存储文件
         file.save(upload_path)
         return '文件已上传'

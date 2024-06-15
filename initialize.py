@@ -1,25 +1,18 @@
 from pandas import read_excel
-from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from models import Student, Teacher
+from models import Student, Teacher, Base
+from engine_init import engine
 
-if __name__ == '__main__':
-    engine = create_engine(
-        'sqlite:///./sqlalchemy.db',
-        echo=True,  # log出SQL语句
-        future=True,  # 使用 SQLAlchemy 2.0
-    )
+
+def init_db():
+    Base.metadata.create_all(bind=engine, checkfirst=True)
 
     with Session(engine) as session:
         students = read_excel('初始化.xlsx', '学生')
         teacher = read_excel('初始化.xlsx', '教师')
 
-        # 清除所有表的内容
-        session.query(Student).delete()
-        session.query(Teacher).delete()
-
         for _, row in students.iterrows():
-            session.add(Student(
+            session.merge(Student(
                 uid=row['学号'],
                 name=row['姓名'],
                 group=row['班级'],
@@ -33,7 +26,7 @@ if __name__ == '__main__':
                 longitude=row.get('经度', 0)
             ))
         for _, row in teacher.iterrows():
-            session.add(Teacher(
+            session.merge(Teacher(
                 uid=row['工号'],
                 name=row['姓名'],
                 password=row.get('密码', 0),
