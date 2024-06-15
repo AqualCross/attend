@@ -47,11 +47,15 @@ def readRecord():
         result = session.execute(stmt)
         students = result.scalars().all()
         for student in students:
+            if student.total_attend == 0:
+                rate = '1'
+            else:
+                rate = str(student.normal_attend / student.total_attend)
             message.append({
                 'name': student.name,
                 'time': str(student.last_time_attend),
                 'late': str(student.late_attend),
                 'absent': str(student.total_attend-student.normal_attend-student.late_attend),
-                'rate': str(student.normal_attend/student.total_attend)
+                'rate': rate
             })
     return jsonify(message)
