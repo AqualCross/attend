@@ -28,7 +28,7 @@ def response(uid):
     latitude = float(data['latitude'])
     longitude = float(data['longitude'])
     now_time = time()
-    message: str
+    message = ''
     with Session(engine) as session:
         stmt = select(Student).where(Student.uid == uid)
         student = session.execute(stmt).scalars().one()
